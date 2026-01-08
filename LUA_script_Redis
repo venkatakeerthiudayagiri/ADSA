@@ -1,0 +1,20 @@
+> EVAL "return 'Hello Adhithya'" 0 
+"Hello Adhithya"
+
+> SET mykey 10 
+"OK"
+
+> EVAL "return redis.call('GET', KEYS[1])" 1 mykey 
+"10"
+
+> EVAL " local val = redis.call('GET', KEYS[1]) val = tonumber(val) val = val + 1 redis.call('SET', KEYS[1], val) return val " 1 mykey 
+(integer) 11
+
+> HSET employee:1 Department IT SalaryGroup 12 
+(integer) 2
+
+> EVAL " return redis.call('HGET', KEYS[1], ARGV[1]) " 1 employee:1 Department 
+"IT"
+
+> EVAL " local sg = redis.call('HGET', KEYS[1], 'SalaryGroup') sg = tonumber(sg) if sg < tonumber(ARGV[1]) then redis.call('HSET', KEYS[1], 'SalaryGroup', sg + 1) return 'UPDATED' else return 'NOT UPDATED' end " 1 employee:1 15 
+"UPDATED"
