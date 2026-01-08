@@ -1,0 +1,121 @@
+import pandas as pd
+import numpy as np
+
+df = pd.read_excel("test_data.xlsx")
+df.head()
+
+print(df.isna().sum())
+
+df = df.dropna().copy()
+df.info()
+
+
+subset = df.loc[144400:148400].copy()
+subset.shape
+
+
+#Q1: NUMBER OF UNIQUE INVOICES
+unique_invoices = subset["Invoice"].nunique()
+unique_invoices
+
+
+#Q2: COUNTRY WITH MOST ORDERS
+orders_by_country = subset.groupby("Country")["Invoice"].nunique()
+
+most_orders_country = orders_by_country.sort_values(ascending=False).head(1)
+most_orders_country
+
+
+#Q3: COUNTRY WITH LEAST ORDERS
+least_orders_country = orders_by_country.sort_values().head(1)
+least_orders_country
+
+#Q4: HIGHEST TOTAL PRICE PER ITEM IN ONE ORDER
+
+subset["TotalPrice"] = subset["Price"] * subset["Quantity"]
+
+highest_item = subset.loc[subset["TotalPrice"].idxmax()]
+highest_item[["Invoice", "TotalPrice"]]
+
+
+#Q5: SECOND HIGHEST SPENDING CUSTOMER
+customer_spend = subset.groupby("Customer ID")["TotalPrice"].sum()
+
+second_customer = customer_spend.sort_values(ascending=False).iloc[1]
+second_customer_id = customer_spend.sort_values(ascending=False).index[1]
+
+second_customer_id, second_customer
+
+
+---------------------------------------------------------------
+
+import pandas as pd
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+from scipy.spatial.distance import euclidean
+
+# --------------------------------------------------
+# 1. Load data
+# --------------------------------------------------
+df = pd.read_csv("data_test_clustering_A1.csv")
+
+# --------------------------------------------------
+# 2. Select index range (CHANGE THESE ONLY)
+# --------------------------------------------------
+start, end = 42482, 43476
+segment = df.iloc[start:end].copy()
+
+# --------------------------------------------------
+# 3. Keep ONLY numeric columns
+# --------------------------------------------------
+segment = segment.select_dtypes(include=[np.number])
+
+# --------------------------------------------------
+# 4. REMOVE NaNs (this is REQUIRED by the task)
+# --------------------------------------------------
+segment = segment.dropna().reset_index(drop=True)
+
+# --------------------------------------------------
+# 5. PCA (2 components)
+# --------------------------------------------------
+pca = PCA(n_components=2)
+pca_data = pca.fit_transform(segment)
+
+# --------------------------------------------------
+# 6. Relative indexes inside the segment
+# --------------------------------------------------
+idx1 = 11
+idx2 = 832
+
+pca_1 = pca_data[idx1]
+pca_2 = pca_data[idx2]
+
+# --------------------------------------------------
+# 7. PCA values
+# --------------------------------------------------
+pca_1_most_sig = round(pca_1[np.argmax(np.abs(pca_1))], 3)
+
+order = np.argsort(np.abs(pca_2))[::-1]
+pca_2_second_sig = round(pca_2[order[1]], 3)
+
+# --------------------------------------------------
+# 8. Euclidean distance
+# --------------------------------------------------
+distance = round(euclidean(pca_1, pca_2), 3)
+
+# --------------------------------------------------
+# 9. KMeans (DETERMINISTIC)
+# --------------------------------------------------
+kmeans = KMeans(n_clusters=4, random_state=0, n_init=10)
+labels = kmeans.fit_predict(segment)
+
+# --------------------------------------------------
+# 10. Output
+# --------------------------------------------------
+print("Distinct clusters:", len(np.unique(labels)))
+print("Index 11 - most significant PCA value:", pca_1_most_sig)
+print("Index 832 - second most significant PCA value:", pca_2_second_sig)
+print("Euclidean distance:", distance)
+print("Cluster label for index 11:", int(labels[idx1]))
+print("Cluster label for index 832:", int(labels[idx2]))
