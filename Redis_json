@@ -1,0 +1,20 @@
+JSON.SET employee:123 $ '{
+  "Department": "IT",
+  "Nationality": "Czech",
+  "SalaryGroup": 12
+}'
+
+> JSON.SET employee:2 $ '{ "Department": "IT", "Nationality": "India", "SalaryGroup": 12 }' 
+"OK"
+
+> JSON.SET employee:2 $.SalaryGroup 15 
+"OK"
+
+> JSON.GET employee:2 
+"{\"Department\":\"IT\",\"Nationality\":\"India\",\"SalaryGroup\":15}"
+
+> DEL employee:2 
+(integer) 1
+
+JSON.DEL employee:2 $.SalaryGroup
+(integer) 0
