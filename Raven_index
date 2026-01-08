@@ -1,86 +1,84 @@
 Create an index that allows searching products by the name of their supplier.
 (For example, enable the query:)
 from index 'Products/BySupplierName' where SupplierName == 'Exotic Liquids'
-
 Write the full index syntax and show how to query it.
-
+----------------
 js
+----------------
 map("Products", p => {
     let s = load(p.Supplier, "Suppliers");
     return {
         SupplierName: s.Name
     };
 });
-
-Indexname 
+---------------
+Indexname: 
 Products/BySupplierName
-
-sql
+------------
+sql:
 from index 'Products/BySupplierName'
 where SupplierName == "Exotic Liquids"
-
+____________________________________________________________________________
 Create an index that allows searching products by the name of their category
 from index '...'
 where CategoryName == "Beverages"
-
+----------------
 js
+----------------
 map("Products", p => {
     let c = load(p.Category, "Categories");
     return {
         CategoryName: c.Name
     };
 });
-
-
+----------------
 sql
+----------------
 from index 'Products/ByCategoryName'
 where CategoryName == "Beverages"
-
-
+____________________________________________________________________________
 Create index that allows searching orders by the name of the company which made the order
-
+----------------
 Js
+----------------
 map("Orders", o => {
     let c = load(o.Company, "Companies");
     return {
         Company: c.Name
     };
 });
-
+----------------
 SQL
+----------------
 from index 'Orders/ByCompanyName'
 where Company == "QUICK-Stop"
-
+____________________________________________________________________________
 Create index that allows searching employees by the name of their supervisor last name
-
-
 JS
-
+----------------
 map("Employees", e => {
     let boss = load(e.ReportsTo, "Employees");
     return {
         BossName: boss.LastName
     };
 });
-
-
+----------------
 SQL
-
+----------------
 from index 'Employees/BySupervisorLastName'
 where BossName == "Buchanan"
-
-
+____________________________________________________________________________
 Create an index that allows searching orders by the last name of the employee who handled the order
-
 JS
-
+----------------
 map("Orders", o => {
     let e = load(o.Employee, "Employees");
     return {
         Employee: e.LastName
     };
 });
-
+----------------
 SQL
+----------------
 from index 'Orders/ByEmployeeLastName'
 where Employee == 'Buchanan'
