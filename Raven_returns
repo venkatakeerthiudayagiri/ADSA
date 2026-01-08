@@ -6,8 +6,7 @@ select {
     OrderId: id(o),
     EmployeeName: e.LastName
 }
-
-
+-----------------
 Create a query that returns a list of all orders with the name of the company who made the order.
 
 from Orders as o
@@ -16,19 +15,16 @@ select {
     Order: id(o),
     CompanyName: c.Name
 }
-
-
+-----------------
 Create a query that returns a list of all products and their categories
 Example: Tofu – Produce, Pavlova – Confections
-
 from Products as p
 load p.Category as c
 select {
     ProductName: p.Name,
     CategoryName: c.Name
 }
-
-
+-----------------
 Create a query that returns a list of all employees and their superiors
 Example:
 king – Buchanan, Suyama – Buchanan - Last names are sufficient
@@ -39,8 +35,7 @@ select {
     EmployeeLastName: e.LastName,
     SupervisorLastName: s.LastName
 }
-
-
+-----------------
 Create a query that returns a list of all orders with the name of the Employee who processed the order
 (example: orders/11 – Davolio)
 
@@ -50,8 +45,7 @@ select {
     Orders: id(o),
     Employee: e.LastName
 }
-
-
+-----------------
 //Create a query that returns a list of all products and their suppliers
 
 from Products as p
@@ -60,8 +54,7 @@ select {
     Products: p.Name,
     Suppliers: s.Name
 }
-
-
+-----------------
 //list of all discontinued products ordered by how many units remains in stock from most to least
 //including products out of stock
 from Products as p
